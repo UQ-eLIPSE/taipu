@@ -38,8 +38,8 @@ const IUser = new Taipu("IUser", {
 
     fullName: or(String, null),
 
-    // `undefined` also fits when an object's property value when it doesn't
-    // have the "dateOfBirth" property
+    // `undefined` also fits this object's property value when it doesn't have
+    // the "dateOfBirth" property
     dateOfBirth: or(DateType, undefined)
 });
 
