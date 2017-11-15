@@ -1,0 +1,24 @@
+{
+  "name": "taipu",
+  "version": "0.0.1",
+  "description": "JavaScript interface checking at runtime",
+  "main": "dist/index.js",
+  "scripts": {
+    "prepare": "npm run build",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UQ-eLIPSE/taipu.git"
+  },
+  "author": "eLIPSE; The University of Queensland",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UQ-eLIPSE/taipu/issues"
+  },
+  "homepage": "https://github.com/UQ-eLIPSE/taipu#readme",
+  "devDependencies": {
+    "typescript": "2.6.1"
+  }
+}
