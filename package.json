@@ -2,7 +2,8 @@
   "name": "taipu",
   "version": "0.0.1",
   "description": "JavaScript interface checking at runtime",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "prepare": "npm run build",
     "build": "tsc",
