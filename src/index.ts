@@ -152,6 +152,11 @@ export class Taipu<T = any> {
     }
 
     private static ValidateObjectInterface(objInterface: TypeDefinitionObjectInterface, value: any) {
+        // If undefined or null, we can't read any properties regardless
+        if (value === undefined || value === null) {
+            return false;
+        }
+
         return Object.keys(objInterface).every((prop) => {
             return Taipu.Validate(objInterface[prop], value[prop]);
         });
@@ -214,40 +219,40 @@ export class Taipu<T = any> {
         return interfaceDesc;
     }
 
-    private static IsTypeDefinitionUndefined(interfaceDesc: any): interfaceDesc is undefined {
-        return interfaceDesc === undefined;
+    private static IsTypeDefinitionUndefined(typeDefinition: any): typeDefinition is undefined {
+        return typeDefinition === undefined;
     }
 
-    private static IsTypeDefinitionNull(interfaceDesc: any): interfaceDesc is null {
-        return interfaceDesc === null;
+    private static IsTypeDefinitionNull(typeDefinition: any): typeDefinition is null {
+        return typeDefinition === null;
     }
 
-    private static IsTypeDefinitionString(interfaceDesc: any): interfaceDesc is StringConstructor {
-        return interfaceDesc === String;
+    private static IsTypeDefinitionString(typeDefinition: any): typeDefinition is StringConstructor {
+        return typeDefinition === String;
     }
 
-    private static IsTypeDefinitionNumber(interfaceDesc: any): interfaceDesc is NumberConstructor {
-        return interfaceDesc === Number;
+    private static IsTypeDefinitionNumber(typeDefinition: any): typeDefinition is NumberConstructor {
+        return typeDefinition === Number;
     }
 
-    private static IsTypeDefinitionBoolean(interfaceDesc: any): interfaceDesc is BooleanConstructor {
-        return interfaceDesc === Boolean;
+    private static IsTypeDefinitionBoolean(typeDefinition: any): typeDefinition is BooleanConstructor {
+        return typeDefinition === Boolean;
     }
 
-    private static IsTypeDefinitionSymbol(interfaceDesc: any): interfaceDesc is SymbolConstructor {
-        return interfaceDesc === Symbol;
+    private static IsTypeDefinitionSymbol(typeDefinition: any): typeDefinition is SymbolConstructor {
+        return typeDefinition === Symbol;
     }
 
-    private static IsTypeDefinitionConstructor(interfaceDesc: any): interfaceDesc is Function {
-        return typeof interfaceDesc === "function";
+    private static IsTypeDefinitionConstructor(typeDefinition: any): typeDefinition is Function {
+        return typeof typeDefinition === "function";
     }
 
-    private static IsTypeDefinitionObjectInterface(interfaceDesc: any): interfaceDesc is TypeDefinitionObjectInterface {
-        return Taipu.ObjectInterfaceSet.has(interfaceDesc);
+    private static IsTypeDefinitionObjectInterface(typeDefinition: any): typeDefinition is TypeDefinitionObjectInterface {
+        return Taipu.ObjectInterfaceSet.has(typeDefinition);
     }
 
-    private static IsTypeDefinitionSetOr(obj: any): obj is TypeDefinitionSetOr {
-        return (obj || {}).__type === InternalSymbol.Or;
+    private static IsTypeDefinitionSetOr(typeDefinition: any): typeDefinition is TypeDefinitionSetOr {
+        return (typeDefinition || {}).__type === InternalSymbol.Or;
     }
 }
 
