@@ -58,14 +58,14 @@ export declare class Taipu<T = any> {
      */
     static GetTypeName(typeDefinition: TypeDefinition): string;
     private static RegisterTypeDefinitionObjectInterface(interfaceDesc);
-    private static IsTypeDefinitionUndefined(interfaceDesc);
-    private static IsTypeDefinitionNull(interfaceDesc);
-    private static IsTypeDefinitionString(interfaceDesc);
-    private static IsTypeDefinitionNumber(interfaceDesc);
-    private static IsTypeDefinitionBoolean(interfaceDesc);
-    private static IsTypeDefinitionSymbol(interfaceDesc);
-    private static IsTypeDefinitionConstructor(interfaceDesc);
-    private static IsTypeDefinitionObjectInterface(interfaceDesc);
-    private static IsTypeDefinitionSetOr(obj);
+    private static IsTypeDefinitionUndefined(typeDefinition);
+    private static IsTypeDefinitionNull(typeDefinition);
+    private static IsTypeDefinitionString(typeDefinition);
+    private static IsTypeDefinitionNumber(typeDefinition);
+    private static IsTypeDefinitionBoolean(typeDefinition);
+    private static IsTypeDefinitionSymbol(typeDefinition);
+    private static IsTypeDefinitionConstructor(typeDefinition);
+    private static IsTypeDefinitionObjectInterface(typeDefinition);
+    private static IsTypeDefinitionSetOr(typeDefinition);
 }
 export declare const or: typeof Taipu.CreateTypeUnion;

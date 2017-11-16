@@ -137,6 +137,10 @@ var Taipu = /** @class */ (function () {
         return value instanceof constructor;
     };
     Taipu.ValidateObjectInterface = function (objInterface, value) {
+        // If undefined or null, we can't read any properties regardless
+        if (value === undefined || value === null) {
+            return false;
+        }
         return Object.keys(objInterface).every(function (prop) {
             return Taipu.Validate(objInterface[prop], value[prop]);
         });
@@ -196,32 +200,32 @@ var Taipu = /** @class */ (function () {
         Taipu.ObjectInterfaceSet.add(interfaceDesc);
         return interfaceDesc;
     };
-    Taipu.IsTypeDefinitionUndefined = function (interfaceDesc) {
-        return interfaceDesc === undefined;
+    Taipu.IsTypeDefinitionUndefined = function (typeDefinition) {
+        return typeDefinition === undefined;
     };
-    Taipu.IsTypeDefinitionNull = function (interfaceDesc) {
-        return interfaceDesc === null;
+    Taipu.IsTypeDefinitionNull = function (typeDefinition) {
+        return typeDefinition === null;
     };
-    Taipu.IsTypeDefinitionString = function (interfaceDesc) {
-        return interfaceDesc === String;
+    Taipu.IsTypeDefinitionString = function (typeDefinition) {
+        return typeDefinition === String;
     };
-    Taipu.IsTypeDefinitionNumber = function (interfaceDesc) {
-        return interfaceDesc === Number;
+    Taipu.IsTypeDefinitionNumber = function (typeDefinition) {
+        return typeDefinition === Number;
     };
-    Taipu.IsTypeDefinitionBoolean = function (interfaceDesc) {
-        return interfaceDesc === Boolean;
+    Taipu.IsTypeDefinitionBoolean = function (typeDefinition) {
+        return typeDefinition === Boolean;
     };
-    Taipu.IsTypeDefinitionSymbol = function (interfaceDesc) {
-        return interfaceDesc === Symbol;
+    Taipu.IsTypeDefinitionSymbol = function (typeDefinition) {
+        return typeDefinition === Symbol;
     };
-    Taipu.IsTypeDefinitionConstructor = function (interfaceDesc) {
-        return typeof interfaceDesc === "function";
+    Taipu.IsTypeDefinitionConstructor = function (typeDefinition) {
+        return typeof typeDefinition === "function";
     };
-    Taipu.IsTypeDefinitionObjectInterface = function (interfaceDesc) {
-        return Taipu.ObjectInterfaceSet.has(interfaceDesc);
+    Taipu.IsTypeDefinitionObjectInterface = function (typeDefinition) {
+        return Taipu.ObjectInterfaceSet.has(typeDefinition);
     };
-    Taipu.IsTypeDefinitionSetOr = function (obj) {
-        return (obj || {}).__type === TypeDefinition_1.InternalSymbol.Or;
+    Taipu.IsTypeDefinitionSetOr = function (typeDefinition) {
+        return (typeDefinition || {}).__type === TypeDefinition_1.InternalSymbol.Or;
     };
     /** Set of Taipu instances instantiated */
     Taipu.InstanceSet = new WeakSet();
