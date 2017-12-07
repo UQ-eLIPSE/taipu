@@ -26,20 +26,30 @@ export declare namespace TaipuStatic {
      *
      * @param types All types to include in the type union
      */
-    function CreateTypeUnion(...types: TypeDefinition[]): TypeDefinitionSetOr;
+    function CreateTypeUnion(...types: Readonly<TypeDefinition>[]): TypeDefinitionSetOr;
+    /**
+     * Translates a type definition or Taipu instance to one which accepts
+     * `undefined` on its properties.
+     *
+     * @param typeDefinition A Taipu instance or type definition object
+     */
+    function CreatePartialType(taipu: Taipu): Taipu;
+    function CreatePartialType(typeDefinition: TypeDefinitionObjectInterface): TypeDefinitionObjectInterface;
+    function CreatePartialType(typeDefinition: TypeDefinitionSetOr): TypeDefinitionSetOr;
+    function CreatePartialType(typeDefinition: TypeDefinition): TypeDefinition;
     /**
      * Returns the string representation of the given type.
      *
      * @param typeDefinition Given type to get name of
      */
-    function GetTypeName(typeDefinition: TypeDefinition): string;
+    function GetTypeName(typeDefinition: Readonly<TypeDefinition>): string;
     /**
      * Runs validation of the value against the type definition.
      *
      * @param typeDefinition Type definition
      * @param value Value to test
      */
-    function Validate(typeDefinition: TypeDefinition, value: any): boolean;
+    function Validate(typeDefinition: Readonly<TypeDefinition>, value: any): boolean;
     function ValidateUndefined(value: any): boolean;
     function ValidateNull(value: any): boolean;
     function ValidateString(value: any): boolean;

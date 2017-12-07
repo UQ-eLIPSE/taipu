@@ -10,5 +10,5 @@ export declare type TypeDefinitionSet = TypeDefinitionSetOr;
 export interface TypeDefinitionSetOr {
     __type: symbol;
     /** Set of types in type union */
-    types: ReadonlyArray<TypeDefinition>;
+    types: ReadonlyArray<Readonly<TypeDefinition>>;
 }

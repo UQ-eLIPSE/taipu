@@ -1,4 +1,12 @@
 "use strict";
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var index_1 = require("./index");
 var TypeDefinition_1 = require("./TypeDefinition");
@@ -56,6 +64,40 @@ var TaipuStatic;
         return typeDefSetOr;
     }
     TaipuStatic.CreateTypeUnion = CreateTypeUnion;
+    function CreatePartialType(typeDefinition) {
+        // Primitives and constructors are not partial-able
+        if (typeDefinition === undefined ||
+            typeDefinition === null ||
+            IsTypeDefinitionString(typeDefinition) ||
+            IsTypeDefinitionNumber(typeDefinition) ||
+            IsTypeDefinitionBoolean(typeDefinition) ||
+            IsTypeDefinitionSymbol(typeDefinition) ||
+            IsTypeDefinitionConstructor(typeDefinition)) {
+            throw new Error("Primitives and constructor functions are not able to be converted to a partial type");
+        }
+        // Type unions are simply expanded to add undefined to it
+        if (IsTypeDefinitionSetOr(typeDefinition)) {
+            return __assign({}, typeDefinition, { types: typeDefinition.types.concat([undefined]) });
+        }
+        // Taipu instance
+        if (IsTaipuInstance(typeDefinition)) {
+            // Get the type definition object inside and convert the definition to a partial type
+            var newTypeDefinition = CreatePartialType(typeDefinition.typeDefinition);
+            return new index_1.Taipu(typeDefinition.name, newTypeDefinition);
+        }
+        // Object interface 
+        if (IsTypeDefinitionObjectInterface(typeDefinition)) {
+            var newTypeDefinitionObj = {};
+            // Run through all keys, and translate them to a type union with
+            // `undefined` into a new type def object
+            for (var key in typeDefinition) {
+                newTypeDefinitionObj[key] = CreateTypeUnion(typeDefinition[key], undefined);
+            }
+            return newTypeDefinitionObj;
+        }
+        throw new Error("Cannot convert input to a partial type");
+    }
+    TaipuStatic.CreatePartialType = CreatePartialType;
     /**
      * Returns the string representation of the given type.
      *

@@ -44,7 +44,7 @@ export namespace TaipuStatic {
      * 
      * @param types All types to include in the type union
      */
-    export function CreateTypeUnion(...types: TypeDefinition[]) {
+    export function CreateTypeUnion(...types: Readonly<TypeDefinition>[]) {
         const typeDefSetOr: TypeDefinitionSetOr = {
             __type: InternalSymbol.Or,
             types,
@@ -54,11 +54,62 @@ export namespace TaipuStatic {
     }
 
     /**
+     * Translates a type definition or Taipu instance to one which accepts
+     * `undefined` on its properties.
+     * 
+     * @param typeDefinition A Taipu instance or type definition object
+     */
+    export function CreatePartialType(taipu: Taipu): Taipu;
+    export function CreatePartialType(typeDefinition: TypeDefinitionObjectInterface): TypeDefinitionObjectInterface;
+    export function CreatePartialType(typeDefinition: TypeDefinitionSetOr): TypeDefinitionSetOr;
+    export function CreatePartialType(typeDefinition: TypeDefinition): TypeDefinition;
+    export function CreatePartialType(typeDefinition: TypeDefinition) {
+        // Primitives and constructors are not partial-able
+        if (typeDefinition === undefined ||
+            typeDefinition === null ||
+            IsTypeDefinitionString(typeDefinition) ||
+            IsTypeDefinitionNumber(typeDefinition) ||
+            IsTypeDefinitionBoolean(typeDefinition) ||
+            IsTypeDefinitionSymbol(typeDefinition) ||
+            IsTypeDefinitionConstructor(typeDefinition)) {
+            throw new Error("Primitives and constructor functions are not able to be converted to a partial type");
+        }
+
+        // Type unions are simply expanded to add undefined to it
+        if (IsTypeDefinitionSetOr(typeDefinition)) {
+            return { ...typeDefinition, types: [...typeDefinition.types, undefined] } as TypeDefinitionSetOr;
+        }
+
+        // Taipu instance
+        if (IsTaipuInstance(typeDefinition)) {
+            // Get the type definition object inside and convert the definition to a partial type
+            const newTypeDefinition = CreatePartialType(typeDefinition.typeDefinition as TypeDefinition);
+
+            return new Taipu(typeDefinition.name, newTypeDefinition);
+        }
+
+        // Object interface 
+        if (IsTypeDefinitionObjectInterface(typeDefinition)) {
+            const newTypeDefinitionObj: TypeDefinitionObjectInterface = {};
+
+            // Run through all keys, and translate them to a type union with
+            // `undefined` into a new type def object
+            for (let key in typeDefinition) {
+                newTypeDefinitionObj[key] = CreateTypeUnion(typeDefinition[key], undefined);
+            }
+
+            return newTypeDefinitionObj;
+        }
+
+        throw new Error("Cannot convert input to a partial type");
+    }
+
+    /**
      * Returns the string representation of the given type.
      * 
      * @param typeDefinition Given type to get name of
      */
-    export function GetTypeName(typeDefinition: TypeDefinition): string {
+    export function GetTypeName(typeDefinition: Readonly<TypeDefinition>): string {
         // Undefined and null, Taipu instances use their string representations
         if (IsTypeDefinitionUndefined(typeDefinition) ||
             IsTypeDefinitionNull(typeDefinition) ||
@@ -105,7 +156,7 @@ export namespace TaipuStatic {
      * @param typeDefinition Type definition
      * @param value Value to test
      */
-    export function Validate(typeDefinition: TypeDefinition, value: any): boolean {
+    export function Validate(typeDefinition: Readonly<TypeDefinition>, value: any): boolean {
         // Undefined and null
         if (typeDefinition === undefined) { return ValidateUndefined(value); }
         if (typeDefinition === null) { return ValidateNull(value); }

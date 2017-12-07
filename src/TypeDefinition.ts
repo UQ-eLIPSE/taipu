@@ -38,5 +38,5 @@ export interface TypeDefinitionSetOr {
     __type: symbol,       // InternalSymbol.Or
 
     /** Set of types in type union */
-    types: ReadonlyArray<TypeDefinition>,
+    types: ReadonlyArray<Readonly<TypeDefinition>>,
 }
