@@ -59,7 +59,7 @@ export namespace TaipuStatic {
      * 
      * @param typeDefinition A Taipu instance or type definition object
      */
-    export function CreatePartialType(taipu: Taipu): Taipu;
+    export function CreatePartialType<T>(taipu: Taipu<T>): Taipu<Partial<T>>;
     export function CreatePartialType(typeDefinition: TypeDefinitionObjectInterface): TypeDefinitionObjectInterface;
     export function CreatePartialType(typeDefinition: TypeDefinitionSetOr): TypeDefinitionSetOr;
     export function CreatePartialType(typeDefinition: TypeDefinition): TypeDefinition;

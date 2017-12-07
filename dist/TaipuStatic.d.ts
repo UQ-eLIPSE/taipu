@@ -33,7 +33,7 @@ export declare namespace TaipuStatic {
      *
      * @param typeDefinition A Taipu instance or type definition object
      */
-    function CreatePartialType(taipu: Taipu): Taipu;
+    function CreatePartialType<T>(taipu: Taipu<T>): Taipu<Partial<T>>;
     function CreatePartialType(typeDefinition: TypeDefinitionObjectInterface): TypeDefinitionObjectInterface;
     function CreatePartialType(typeDefinition: TypeDefinitionSetOr): TypeDefinitionSetOr;
     function CreatePartialType(typeDefinition: TypeDefinition): TypeDefinition;
