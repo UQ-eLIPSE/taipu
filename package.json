@@ -1,6 +1,6 @@
 {
   "name": "taipu",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "JavaScript interface checking at runtime",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
