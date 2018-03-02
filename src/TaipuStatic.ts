@@ -1,4 +1,6 @@
 import { Taipu } from "./index";
+import { PropChain } from "./PropChain";
+import { ValidationResult } from "./ValidationResult";
 import { TypeDefinition, TypeDefinitionObjectInterface, TypeDefinitionSetOr, InternalSymbol } from "./TypeDefinition";
 
 export namespace TaipuStatic {
@@ -124,30 +126,42 @@ export namespace TaipuStatic {
         if (IsTypeDefinitionSymbol(typeDefinition)) { return "symbol"; }
 
         // Constructor functions
-        if (IsTypeDefinitionConstructor(typeDefinition)) {
-            // Attempt to get the constructor name
-            const constructorName = typeDefinition.name;
-
-            // [function].name may not be defined or may not be a string value
-            // (e.g. when it has been declared as a method)
-            if (typeof constructorName !== "string") {
-                return "[Function]";
-            }
-
-            return constructorName;
-        }
+        if (IsTypeDefinitionConstructor(typeDefinition)) { return GetFunctionName(typeDefinition); }
 
         // Object interface
-        if (IsTypeDefinitionObjectInterface(typeDefinition)) {
-            return "[Interface]";
-        }
+        if (IsTypeDefinitionObjectInterface(typeDefinition)) { return "[Interface]"; }
 
         // Type union
-        if (IsTypeDefinitionSetOr(typeDefinition)) {
-            return `(${typeDefinition.types.map(Taipu.GetTypeName).join(" | ")})`;
-        }
+        if (IsTypeDefinitionSetOr(typeDefinition)) { return GetTypeUnionName(typeDefinition); }
 
         throw new Error("Cannot convert type definition to string");
+    }
+
+    /**
+     * Returns the name of the function, where available.
+     * 
+     * @param fn Given function to get name of
+     */
+    export function GetFunctionName(fn: Function): string {
+        // Attempt to get the function name
+        const functionName: any = fn.name;
+
+        // [function].name may not be defined or may not be a string value
+        // (e.g. when it has been declared as a method)
+        if (typeof functionName !== "string") {
+            return "[Function]";
+        }
+
+        return functionName;
+    }
+
+    /**
+     * Returns a string representation of a type union.
+     * 
+     * @param typeUnion
+     */
+    export function GetTypeUnionName(typeUnion: TypeDefinitionSetOr): string {
+        return `(${typeUnion.types.map(Taipu.GetTypeName).join(" | ")})`;
     }
 
     /**
@@ -155,76 +169,148 @@ export namespace TaipuStatic {
      * 
      * @param typeDefinition Type definition
      * @param value Value to test
+     * @param propChain Property access chain
      */
-    export function Validate(typeDefinition: Readonly<TypeDefinition>, value: any): boolean {
+    export function Validate(typeDefinition: Readonly<TypeDefinition>, value: any, propChain: PropChain = []): ValidationResult {
         // Undefined and null
-        if (typeDefinition === undefined) { return ValidateUndefined(value); }
-        if (typeDefinition === null) { return ValidateNull(value); }
+        if (typeDefinition === undefined) { return ValidateUndefined(value, propChain); }
+        if (typeDefinition === null) { return ValidateNull(value, propChain); }
 
         // Primitives are defined by their constructors
-        if (IsTypeDefinitionString(typeDefinition)) { return ValidateString(value); }
-        if (IsTypeDefinitionNumber(typeDefinition)) { return ValidateNumber(value); }
-        if (IsTypeDefinitionBoolean(typeDefinition)) { return ValidateBoolean(value); }
-        if (IsTypeDefinitionSymbol(typeDefinition)) { return ValidateSymbol(value); }
+        if (IsTypeDefinitionString(typeDefinition)) { return ValidateString(value, propChain); }
+        if (IsTypeDefinitionNumber(typeDefinition)) { return ValidateNumber(value, propChain); }
+        if (IsTypeDefinitionBoolean(typeDefinition)) { return ValidateBoolean(value, propChain); }
+        if (IsTypeDefinitionSymbol(typeDefinition)) { return ValidateSymbol(value, propChain); }
 
         // Checking values (object instances) against constructors
-        if (IsTypeDefinitionConstructor(typeDefinition)) { return ValidateInstanceOf(typeDefinition, value); }
+        if (IsTypeDefinitionConstructor(typeDefinition)) { return ValidateInstanceOf(typeDefinition, value, propChain); }
 
         // Taipu instance
-        if (IsTaipuInstance(typeDefinition)) { return typeDefinition.is(value); }
+        if (IsTaipuInstance(typeDefinition)) { return Validate(typeDefinition.typeDefinition, value, propChain); }
 
         // Object interface 
-        if (IsTypeDefinitionObjectInterface(typeDefinition)) { return ValidateObjectInterface(typeDefinition, value); }
+        if (IsTypeDefinitionObjectInterface(typeDefinition)) { return ValidateObjectInterface(typeDefinition, value, propChain); }
 
         // Type union
-        if (IsTypeDefinitionSetOr(typeDefinition)) { return ValidateTypeUnion(typeDefinition, value); }
+        if (IsTypeDefinitionSetOr(typeDefinition)) { return ValidateTypeUnion(typeDefinition, value, propChain); }
 
         throw new Error("Cannot validate value with type definition");
     }
 
-    export function ValidateUndefined(value: any) {
-        return value === undefined;
+    export function ValidateUndefined(value: any, propChain: PropChain): ValidationResult {
+        const success = value === undefined;
+        const message = success ? undefined : "Value is not `undefined`";
+
+        return {
+            propChain,
+            success,
+            message,
+        };
     }
 
-    export function ValidateNull(value: any) {
-        return value === null;
+    export function ValidateNull(value: any, propChain: PropChain): ValidationResult {
+        const success = value === null;
+        const message = success ? undefined : "Value is not `null`";
+
+        return {
+            propChain,
+            success,
+            message,
+        };
     }
 
-    export function ValidateString(value: any) {
-        return typeof value === "string";
+    export function ValidateString(value: any, propChain: PropChain): ValidationResult {
+        const success = (typeof value === "string");
+        const message = success ? undefined : "Value is not of type 'string'";
+
+        return {
+            propChain,
+            success,
+            message,
+        };
     }
 
-    export function ValidateNumber(value: any) {
-        return typeof value === "number";
+    export function ValidateNumber(value: any, propChain: PropChain): ValidationResult {
+        const success = (typeof value === "number");
+        const message = success ? undefined : "Value is not of type 'number'";
+
+        return {
+            propChain,
+            success,
+            message,
+        };
     }
 
-    export function ValidateBoolean(value: any) {
-        return typeof value === "boolean";
+    export function ValidateBoolean(value: any, propChain: PropChain): ValidationResult {
+        const success = (typeof value === "boolean");
+        const message = success ? undefined : "Value is not of type 'boolean'";
+
+        return {
+            propChain,
+            success,
+            message,
+        };
     }
 
-    export function ValidateSymbol(value: any) {
-        return typeof value === "symbol";
+    export function ValidateSymbol(value: any, propChain: PropChain): ValidationResult {
+        const success = (typeof value === "symbol");
+        const message = success ? undefined : "Value is not of type 'symbol'";
+
+        return {
+            propChain,
+            success,
+            message,
+        };
     }
 
-    export function ValidateInstanceOf(constructor: Function, value: any) {
-        return value instanceof constructor;
+    export function ValidateInstanceOf(constructor: Function, value: any, propChain: PropChain): ValidationResult {
+        const success = (value instanceof constructor);
+        const message = success ? undefined : `Value is not instance of '${GetFunctionName(constructor)}'`;
+
+        return {
+            propChain,
+            success,
+            message,
+        };
     }
 
-    export function ValidateObjectInterface(objInterface: TypeDefinitionObjectInterface, value: any) {
+    export function ValidateObjectInterface(objInterface: TypeDefinitionObjectInterface, value: any, propChain: PropChain): ValidationResult {
         // If undefined or null, we can't read any properties regardless
         if (value === undefined || value === null) {
-            return false;
+            return {
+                propChain,
+                success: false,
+                message: `Expected object value, got \`${value}\``,
+            };
         }
 
-        return Object.keys(objInterface).every((prop) => {
-            return Validate(objInterface[prop], value[prop]);
-        });
+        for (let prop in objInterface) {
+            const propValidationResult = Validate(objInterface[prop], value[prop], [...propChain, prop]);
+
+            // Return the inner validation result if the validation fails
+            if (propValidationResult.success === false) {
+                return propValidationResult;
+            }
+        }
+
+        return {
+            propChain,
+            success: true,
+            message: undefined,
+        };
     }
 
-    export function ValidateTypeUnion(typeUnion: TypeDefinitionSetOr, value: any) {
-        return typeUnion.types.some((typeDef) => {
-            return Validate(typeDef, value);
+    export function ValidateTypeUnion(typeUnion: TypeDefinitionSetOr, value: any, propChain: PropChain): ValidationResult {
+        const success = typeUnion.types.some((typeDef) => {
+            return Validate(typeDef, value, propChain).success;
         });
+        const message = success ? undefined : `Value does not conform to type '${GetTypeUnionName(typeUnion)}'`;
+
+        return {
+            propChain,
+            success,
+            message,
+        };
     }
 
     export function IsTypeDefinitionUndefined(typeDefinition: any): typeDefinition is undefined {

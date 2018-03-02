@@ -1,6 +1,6 @@
+import { TaipuStatic } from "./TaipuStatic";
 import { TypeDefinition } from "./TypeDefinition";
 import { ValidationResult } from "./ValidationResult";
-import { TaipuStatic } from "./TaipuStatic";
 export declare class Taipu<T = any> {
     /** Name of the Taipu type */
     readonly name: string;
@@ -12,6 +12,7 @@ export declare class Taipu<T = any> {
      */
     constructor(name: string, typeDefinition: TypeDefinition);
     toString(): string;
+    readonly type: string;
     /**
      * Validates the given value to the type definition defined in the Taipu
      * instance.

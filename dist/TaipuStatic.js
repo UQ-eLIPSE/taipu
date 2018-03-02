@@ -125,14 +125,7 @@ var TaipuStatic;
         }
         // Constructor functions
         if (IsTypeDefinitionConstructor(typeDefinition)) {
-            // Attempt to get the constructor name
-            var constructorName = typeDefinition.name;
-            // [function].name may not be defined or may not be a string value
-            // (e.g. when it has been declared as a method)
-            if (typeof constructorName !== "string") {
-                return "[Function]";
-            }
-            return constructorName;
+            return GetFunctionName(typeDefinition);
         }
         // Object interface
         if (IsTypeDefinitionObjectInterface(typeDefinition)) {
@@ -140,99 +133,187 @@ var TaipuStatic;
         }
         // Type union
         if (IsTypeDefinitionSetOr(typeDefinition)) {
-            return "(" + typeDefinition.types.map(index_1.Taipu.GetTypeName).join(" | ") + ")";
+            return GetTypeUnionName(typeDefinition);
         }
         throw new Error("Cannot convert type definition to string");
     }
     TaipuStatic.GetTypeName = GetTypeName;
     /**
+     * Returns the name of the function, where available.
+     *
+     * @param fn Given function to get name of
+     */
+    function GetFunctionName(fn) {
+        // Attempt to get the function name
+        var functionName = fn.name;
+        // [function].name may not be defined or may not be a string value
+        // (e.g. when it has been declared as a method)
+        if (typeof functionName !== "string") {
+            return "[Function]";
+        }
+        return functionName;
+    }
+    TaipuStatic.GetFunctionName = GetFunctionName;
+    /**
+     * Returns a string representation of a type union.
+     *
+     * @param typeUnion
+     */
+    function GetTypeUnionName(typeUnion) {
+        return "(" + typeUnion.types.map(index_1.Taipu.GetTypeName).join(" | ") + ")";
+    }
+    TaipuStatic.GetTypeUnionName = GetTypeUnionName;
+    /**
      * Runs validation of the value against the type definition.
      *
      * @param typeDefinition Type definition
      * @param value Value to test
+     * @param propChain Property access chain
      */
-    function Validate(typeDefinition, value) {
+    function Validate(typeDefinition, value, propChain) {
+        if (propChain === void 0) { propChain = []; }
         // Undefined and null
         if (typeDefinition === undefined) {
-            return ValidateUndefined(value);
+            return ValidateUndefined(value, propChain);
         }
         if (typeDefinition === null) {
-            return ValidateNull(value);
+            return ValidateNull(value, propChain);
         }
         // Primitives are defined by their constructors
         if (IsTypeDefinitionString(typeDefinition)) {
-            return ValidateString(value);
+            return ValidateString(value, propChain);
         }
         if (IsTypeDefinitionNumber(typeDefinition)) {
-            return ValidateNumber(value);
+            return ValidateNumber(value, propChain);
         }
         if (IsTypeDefinitionBoolean(typeDefinition)) {
-            return ValidateBoolean(value);
+            return ValidateBoolean(value, propChain);
         }
         if (IsTypeDefinitionSymbol(typeDefinition)) {
-            return ValidateSymbol(value);
+            return ValidateSymbol(value, propChain);
         }
         // Checking values (object instances) against constructors
         if (IsTypeDefinitionConstructor(typeDefinition)) {
-            return ValidateInstanceOf(typeDefinition, value);
+            return ValidateInstanceOf(typeDefinition, value, propChain);
         }
         // Taipu instance
         if (IsTaipuInstance(typeDefinition)) {
-            return typeDefinition.is(value);
+            return Validate(typeDefinition.typeDefinition, value, propChain);
         }
         // Object interface 
         if (IsTypeDefinitionObjectInterface(typeDefinition)) {
-            return ValidateObjectInterface(typeDefinition, value);
+            return ValidateObjectInterface(typeDefinition, value, propChain);
         }
         // Type union
         if (IsTypeDefinitionSetOr(typeDefinition)) {
-            return ValidateTypeUnion(typeDefinition, value);
+            return ValidateTypeUnion(typeDefinition, value, propChain);
         }
         throw new Error("Cannot validate value with type definition");
     }
     TaipuStatic.Validate = Validate;
-    function ValidateUndefined(value) {
-        return value === undefined;
+    function ValidateUndefined(value, propChain) {
+        var success = value === undefined;
+        var message = success ? undefined : "Value is not `undefined`";
+        return {
+            propChain: propChain,
+            success: success,
+            message: message,
+        };
     }
     TaipuStatic.ValidateUndefined = ValidateUndefined;
-    function ValidateNull(value) {
-        return value === null;
+    function ValidateNull(value, propChain) {
+        var success = value === null;
+        var message = success ? undefined : "Value is not `null`";
+        return {
+            propChain: propChain,
+            success: success,
+            message: message,
+        };
     }
     TaipuStatic.ValidateNull = ValidateNull;
-    function ValidateString(value) {
-        return typeof value === "string";
+    function ValidateString(value, propChain) {
+        var success = (typeof value === "string");
+        var message = success ? undefined : "Value is not of type 'string'";
+        return {
+            propChain: propChain,
+            success: success,
+            message: message,
+        };
     }
     TaipuStatic.ValidateString = ValidateString;
-    function ValidateNumber(value) {
-        return typeof value === "number";
+    function ValidateNumber(value, propChain) {
+        var success = (typeof value === "number");
+        var message = success ? undefined : "Value is not of type 'number'";
+        return {
+            propChain: propChain,
+            success: success,
+            message: message,
+        };
     }
     TaipuStatic.ValidateNumber = ValidateNumber;
-    function ValidateBoolean(value) {
-        return typeof value === "boolean";
+    function ValidateBoolean(value, propChain) {
+        var success = (typeof value === "boolean");
+        var message = success ? undefined : "Value is not of type 'boolean'";
+        return {
+            propChain: propChain,
+            success: success,
+            message: message,
+        };
     }
     TaipuStatic.ValidateBoolean = ValidateBoolean;
-    function ValidateSymbol(value) {
-        return typeof value === "symbol";
+    function ValidateSymbol(value, propChain) {
+        var success = (typeof value === "symbol");
+        var message = success ? undefined : "Value is not of type 'symbol'";
+        return {
+            propChain: propChain,
+            success: success,
+            message: message,
+        };
     }
     TaipuStatic.ValidateSymbol = ValidateSymbol;
-    function ValidateInstanceOf(constructor, value) {
-        return value instanceof constructor;
+    function ValidateInstanceOf(constructor, value, propChain) {
+        var success = (value instanceof constructor);
+        var message = success ? undefined : "Value is not instance of '" + GetFunctionName(constructor) + "'";
+        return {
+            propChain: propChain,
+            success: success,
+            message: message,
+        };
     }
     TaipuStatic.ValidateInstanceOf = ValidateInstanceOf;
-    function ValidateObjectInterface(objInterface, value) {
+    function ValidateObjectInterface(objInterface, value, propChain) {
         // If undefined or null, we can't read any properties regardless
         if (value === undefined || value === null) {
-            return false;
+            return {
+                propChain: propChain,
+                success: false,
+                message: "Expected object value, got `" + value + "`",
+            };
         }
-        return Object.keys(objInterface).every(function (prop) {
-            return Validate(objInterface[prop], value[prop]);
-        });
+        for (var prop in objInterface) {
+            var propValidationResult = Validate(objInterface[prop], value[prop], propChain.concat([prop]));
+            // Return the inner validation result if the validation fails
+            if (propValidationResult.success === false) {
+                return propValidationResult;
+            }
+        }
+        return {
+            propChain: propChain,
+            success: true,
+            message: undefined,
+        };
     }
     TaipuStatic.ValidateObjectInterface = ValidateObjectInterface;
-    function ValidateTypeUnion(typeUnion, value) {
-        return typeUnion.types.some(function (typeDef) {
-            return Validate(typeDef, value);
+    function ValidateTypeUnion(typeUnion, value, propChain) {
+        var success = typeUnion.types.some(function (typeDef) {
+            return Validate(typeDef, value, propChain).success;
         });
+        var message = success ? undefined : "Value does not conform to type '" + GetTypeUnionName(typeUnion) + "'";
+        return {
+            propChain: propChain,
+            success: success,
+            message: message,
+        };
     }
     TaipuStatic.ValidateTypeUnion = ValidateTypeUnion;
     function IsTypeDefinitionUndefined(typeDefinition) {

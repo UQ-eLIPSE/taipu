@@ -1,6 +1,6 @@
+import { TaipuStatic } from "./TaipuStatic";
 import { TypeDefinition } from "./TypeDefinition";
 import { ValidationResult } from "./ValidationResult";
-import { TaipuStatic } from "./TaipuStatic";
 
 export class Taipu<T = any> {
     /** Name of the Taipu type */
@@ -40,7 +40,11 @@ export class Taipu<T = any> {
     }
 
     public toString() {
-        return `Taipu("${this.name}" = ${TaipuStatic.GetTypeName(this.typeDefinition)})`;
+        return `Taipu("${this.name}")`;
+    }
+
+    public get type() {
+        return TaipuStatic.GetTypeName(this.typeDefinition);
     }
 
     /**
@@ -49,14 +53,8 @@ export class Taipu<T = any> {
      * 
      * @param value Value to test
      */
-    public validate(value: any) {
-        const success = TaipuStatic.Validate(this.typeDefinition, value);
-
-        const validationResult: ValidationResult = {
-            success: success as any,        // TODO: Fix up discriminated type union (true | false)
-        }
-
-        return validationResult;
+    public validate(value: any): ValidationResult {
+        return TaipuStatic.Validate(this.typeDefinition, value);
     }
 
     /**

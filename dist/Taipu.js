@@ -29,8 +29,15 @@ var Taipu = /** @class */ (function () {
         }
     }
     Taipu.prototype.toString = function () {
-        return "Taipu(\"" + this.name + "\" = " + TaipuStatic_1.TaipuStatic.GetTypeName(this.typeDefinition) + ")";
+        return "Taipu(\"" + this.name + "\")";
     };
+    Object.defineProperty(Taipu.prototype, "type", {
+        get: function () {
+            return TaipuStatic_1.TaipuStatic.GetTypeName(this.typeDefinition);
+        },
+        enumerable: true,
+        configurable: true
+    });
     /**
      * Validates the given value to the type definition defined in the Taipu
      * instance.
@@ -38,11 +45,7 @@ var Taipu = /** @class */ (function () {
      * @param value Value to test
      */
     Taipu.prototype.validate = function (value) {
-        var success = TaipuStatic_1.TaipuStatic.Validate(this.typeDefinition, value);
-        var validationResult = {
-            success: success,
-        };
-        return validationResult;
+        return TaipuStatic_1.TaipuStatic.Validate(this.typeDefinition, value);
     };
     /**
      * Runs validation of the given value, but only returns the success value.

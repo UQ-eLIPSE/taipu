@@ -1,7 +1,6 @@
-export declare type ValidationResult = ValidationResultSuccess | ValidationResultFailure;
-export interface ValidationResultSuccess {
-    success: true;
-}
-export interface ValidationResultFailure {
-    success: false;
+import { PropChain } from "./PropChain";
+export interface ValidationResult {
+    propChain: PropChain;
+    success: boolean;
+    message: string | undefined;
 }

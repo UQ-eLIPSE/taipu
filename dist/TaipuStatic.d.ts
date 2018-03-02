@@ -1,4 +1,6 @@
 import { Taipu } from "./index";
+import { PropChain } from "./PropChain";
+import { ValidationResult } from "./ValidationResult";
 import { TypeDefinition, TypeDefinitionObjectInterface, TypeDefinitionSetOr } from "./TypeDefinition";
 export declare namespace TaipuStatic {
     /**
@@ -44,21 +46,34 @@ export declare namespace TaipuStatic {
      */
     function GetTypeName(typeDefinition: Readonly<TypeDefinition>): string;
     /**
+     * Returns the name of the function, where available.
+     *
+     * @param fn Given function to get name of
+     */
+    function GetFunctionName(fn: Function): string;
+    /**
+     * Returns a string representation of a type union.
+     *
+     * @param typeUnion
+     */
+    function GetTypeUnionName(typeUnion: TypeDefinitionSetOr): string;
+    /**
      * Runs validation of the value against the type definition.
      *
      * @param typeDefinition Type definition
      * @param value Value to test
+     * @param propChain Property access chain
      */
-    function Validate(typeDefinition: Readonly<TypeDefinition>, value: any): boolean;
-    function ValidateUndefined(value: any): boolean;
-    function ValidateNull(value: any): boolean;
-    function ValidateString(value: any): boolean;
-    function ValidateNumber(value: any): boolean;
-    function ValidateBoolean(value: any): boolean;
-    function ValidateSymbol(value: any): boolean;
-    function ValidateInstanceOf(constructor: Function, value: any): boolean;
-    function ValidateObjectInterface(objInterface: TypeDefinitionObjectInterface, value: any): boolean;
-    function ValidateTypeUnion(typeUnion: TypeDefinitionSetOr, value: any): boolean;
+    function Validate(typeDefinition: Readonly<TypeDefinition>, value: any, propChain?: PropChain): ValidationResult;
+    function ValidateUndefined(value: any, propChain: PropChain): ValidationResult;
+    function ValidateNull(value: any, propChain: PropChain): ValidationResult;
+    function ValidateString(value: any, propChain: PropChain): ValidationResult;
+    function ValidateNumber(value: any, propChain: PropChain): ValidationResult;
+    function ValidateBoolean(value: any, propChain: PropChain): ValidationResult;
+    function ValidateSymbol(value: any, propChain: PropChain): ValidationResult;
+    function ValidateInstanceOf(constructor: Function, value: any, propChain: PropChain): ValidationResult;
+    function ValidateObjectInterface(objInterface: TypeDefinitionObjectInterface, value: any, propChain: PropChain): ValidationResult;
+    function ValidateTypeUnion(typeUnion: TypeDefinitionSetOr, value: any, propChain: PropChain): ValidationResult;
     function IsTypeDefinitionUndefined(typeDefinition: any): typeDefinition is undefined;
     function IsTypeDefinitionNull(typeDefinition: any): typeDefinition is null;
     function IsTypeDefinitionString(typeDefinition: any): typeDefinition is StringConstructor;
