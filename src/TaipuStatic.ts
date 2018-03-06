@@ -161,7 +161,23 @@ export namespace TaipuStatic {
      * @param typeUnion
      */
     export function GetTypeUnionName(typeUnion: TypeDefinitionSetOr): string {
-        return `(${typeUnion.types.map(Taipu.GetTypeName).join(" | ")})`;
+        return `(${typeUnion.types.map(GetTypeName).join(" | ")})`;
+    }
+
+    /**
+     * Prepends the Taipu instance name to the message of a validation result,
+     * and returns a new copy of the validation result object.
+     * 
+     * @param result Validation result object
+     * @param instance Taipu instance
+     */
+    export function PrependTaipuInstanceNameToValidationMessage(result: Readonly<ValidationResult>, instance: Taipu): ValidationResult {
+        return {
+            ...result,
+
+            // Prefix Taipu instance name
+            message: `${instance.toString()}: ${result.message}`,
+        };
     }
 
     /**
@@ -186,7 +202,11 @@ export namespace TaipuStatic {
         if (IsTypeDefinitionConstructor(typeDefinition)) { return ValidateInstanceOf(typeDefinition, value, propChain); }
 
         // Taipu instance
-        if (IsTaipuInstance(typeDefinition)) { return Validate(typeDefinition.typeDefinition, value, propChain); }
+        if (IsTaipuInstance(typeDefinition)) {
+            const taipuInstance = typeDefinition;
+            const result = Validate(taipuInstance.typeDefinition, value, propChain);
+            return PrependTaipuInstanceNameToValidationMessage(result, taipuInstance);
+        }
 
         // Object interface 
         if (IsTypeDefinitionObjectInterface(typeDefinition)) { return ValidateObjectInterface(typeDefinition, value, propChain); }

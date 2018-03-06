@@ -55,11 +55,7 @@ export class Taipu<T = any> {
      */
     public validate(value: any): ValidationResult {
         const result = TaipuStatic.Validate(this.typeDefinition, value);
-
-        // Prefix Taipu instance name
-        result.message = `${this.toString()}: ${result.message}`;
-
-        return result;
+        return TaipuStatic.PrependTaipuInstanceNameToValidationMessage(result, this);
     }
 
     /**

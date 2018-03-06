@@ -58,6 +58,14 @@ export declare namespace TaipuStatic {
      */
     function GetTypeUnionName(typeUnion: TypeDefinitionSetOr): string;
     /**
+     * Prepends the Taipu instance name to the message of a validation result,
+     * and returns a new copy of the validation result object.
+     *
+     * @param result Validation result object
+     * @param instance Taipu instance
+     */
+    function PrependTaipuInstanceNameToValidationMessage(result: Readonly<ValidationResult>, instance: Taipu): ValidationResult;
+    /**
      * Runs validation of the value against the type definition.
      *
      * @param typeDefinition Type definition

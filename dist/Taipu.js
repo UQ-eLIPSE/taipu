@@ -46,9 +46,7 @@ var Taipu = /** @class */ (function () {
      */
     Taipu.prototype.validate = function (value) {
         var result = TaipuStatic_1.TaipuStatic.Validate(this.typeDefinition, value);
-        // Prefix Taipu instance name
-        result.message = this.toString() + ": " + result.message;
-        return result;
+        return TaipuStatic_1.TaipuStatic.PrependTaipuInstanceNameToValidationMessage(result, this);
     };
     /**
      * Runs validation of the given value, but only returns the success value.

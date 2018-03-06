@@ -160,9 +160,22 @@ var TaipuStatic;
      * @param typeUnion
      */
     function GetTypeUnionName(typeUnion) {
-        return "(" + typeUnion.types.map(index_1.Taipu.GetTypeName).join(" | ") + ")";
+        return "(" + typeUnion.types.map(GetTypeName).join(" | ") + ")";
     }
     TaipuStatic.GetTypeUnionName = GetTypeUnionName;
+    /**
+     * Prepends the Taipu instance name to the message of a validation result,
+     * and returns a new copy of the validation result object.
+     *
+     * @param result Validation result object
+     * @param instance Taipu instance
+     */
+    function PrependTaipuInstanceNameToValidationMessage(result, instance) {
+        return __assign({}, result, { 
+            // Prefix Taipu instance name
+            message: instance.toString() + ": " + result.message });
+    }
+    TaipuStatic.PrependTaipuInstanceNameToValidationMessage = PrependTaipuInstanceNameToValidationMessage;
     /**
      * Runs validation of the value against the type definition.
      *
@@ -198,7 +211,9 @@ var TaipuStatic;
         }
         // Taipu instance
         if (IsTaipuInstance(typeDefinition)) {
-            return Validate(typeDefinition.typeDefinition, value, propChain);
+            var taipuInstance = typeDefinition;
+            var result = Validate(taipuInstance.typeDefinition, value, propChain);
+            return PrependTaipuInstanceNameToValidationMessage(result, taipuInstance);
         }
         // Object interface 
         if (IsTypeDefinitionObjectInterface(typeDefinition)) {
