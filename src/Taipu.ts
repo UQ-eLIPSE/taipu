@@ -54,7 +54,12 @@ export class Taipu<T = any> {
      * @param value Value to test
      */
     public validate(value: any): ValidationResult {
-        return TaipuStatic.Validate(this.typeDefinition, value);
+        const result = TaipuStatic.Validate(this.typeDefinition, value);
+
+        // Prefix Taipu instance name
+        result.message = `${this.toString()}: ${result.message}`;
+
+        return result;
     }
 
     /**

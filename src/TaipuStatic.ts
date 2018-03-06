@@ -198,7 +198,7 @@ export namespace TaipuStatic {
     }
 
     export function ValidateUndefined(value: any, propChain: PropChain): ValidationResult {
-        const success = value === undefined;
+        const success = (value === undefined);
         const message = success ? undefined : "Value is not `undefined`";
 
         return {
@@ -209,7 +209,7 @@ export namespace TaipuStatic {
     }
 
     export function ValidateNull(value: any, propChain: PropChain): ValidationResult {
-        const success = value === null;
+        const success = (value === null);
         const message = success ? undefined : "Value is not `null`";
 
         return {
@@ -221,7 +221,7 @@ export namespace TaipuStatic {
 
     export function ValidateString(value: any, propChain: PropChain): ValidationResult {
         const success = (typeof value === "string");
-        const message = success ? undefined : "Value is not of type 'string'";
+        const message = success ? undefined : `Value is not of type "string"`;
 
         return {
             propChain,
@@ -232,7 +232,7 @@ export namespace TaipuStatic {
 
     export function ValidateNumber(value: any, propChain: PropChain): ValidationResult {
         const success = (typeof value === "number");
-        const message = success ? undefined : "Value is not of type 'number'";
+        const message = success ? undefined : `Value is not of type "number"`;
 
         return {
             propChain,
@@ -243,7 +243,7 @@ export namespace TaipuStatic {
 
     export function ValidateBoolean(value: any, propChain: PropChain): ValidationResult {
         const success = (typeof value === "boolean");
-        const message = success ? undefined : "Value is not of type 'boolean'";
+        const message = success ? undefined : `Value is not of type "boolean"`;
 
         return {
             propChain,
@@ -254,7 +254,7 @@ export namespace TaipuStatic {
 
     export function ValidateSymbol(value: any, propChain: PropChain): ValidationResult {
         const success = (typeof value === "symbol");
-        const message = success ? undefined : "Value is not of type 'symbol'";
+        const message = success ? undefined : `Value is not of type "symbol"`;
 
         return {
             propChain,
@@ -265,7 +265,7 @@ export namespace TaipuStatic {
 
     export function ValidateInstanceOf(constructor: Function, value: any, propChain: PropChain): ValidationResult {
         const success = (value instanceof constructor);
-        const message = success ? undefined : `Value is not instance of '${GetFunctionName(constructor)}'`;
+        const message = success ? undefined : `Value is not instance of "${GetFunctionName(constructor)}"`;
 
         return {
             propChain,
@@ -304,7 +304,7 @@ export namespace TaipuStatic {
         const success = typeUnion.types.some((typeDef) => {
             return Validate(typeDef, value, propChain).success;
         });
-        const message = success ? undefined : `Value does not conform to type '${GetTypeUnionName(typeUnion)}'`;
+        const message = success ? undefined : `Value is not of type "${GetTypeUnionName(typeUnion)}"`;
 
         return {
             propChain,

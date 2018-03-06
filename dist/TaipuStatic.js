@@ -212,7 +212,7 @@ var TaipuStatic;
     }
     TaipuStatic.Validate = Validate;
     function ValidateUndefined(value, propChain) {
-        var success = value === undefined;
+        var success = (value === undefined);
         var message = success ? undefined : "Value is not `undefined`";
         return {
             propChain: propChain,
@@ -222,7 +222,7 @@ var TaipuStatic;
     }
     TaipuStatic.ValidateUndefined = ValidateUndefined;
     function ValidateNull(value, propChain) {
-        var success = value === null;
+        var success = (value === null);
         var message = success ? undefined : "Value is not `null`";
         return {
             propChain: propChain,
@@ -233,7 +233,7 @@ var TaipuStatic;
     TaipuStatic.ValidateNull = ValidateNull;
     function ValidateString(value, propChain) {
         var success = (typeof value === "string");
-        var message = success ? undefined : "Value is not of type 'string'";
+        var message = success ? undefined : "Value is not of type \"string\"";
         return {
             propChain: propChain,
             success: success,
@@ -243,7 +243,7 @@ var TaipuStatic;
     TaipuStatic.ValidateString = ValidateString;
     function ValidateNumber(value, propChain) {
         var success = (typeof value === "number");
-        var message = success ? undefined : "Value is not of type 'number'";
+        var message = success ? undefined : "Value is not of type \"number\"";
         return {
             propChain: propChain,
             success: success,
@@ -253,7 +253,7 @@ var TaipuStatic;
     TaipuStatic.ValidateNumber = ValidateNumber;
     function ValidateBoolean(value, propChain) {
         var success = (typeof value === "boolean");
-        var message = success ? undefined : "Value is not of type 'boolean'";
+        var message = success ? undefined : "Value is not of type \"boolean\"";
         return {
             propChain: propChain,
             success: success,
@@ -263,7 +263,7 @@ var TaipuStatic;
     TaipuStatic.ValidateBoolean = ValidateBoolean;
     function ValidateSymbol(value, propChain) {
         var success = (typeof value === "symbol");
-        var message = success ? undefined : "Value is not of type 'symbol'";
+        var message = success ? undefined : "Value is not of type \"symbol\"";
         return {
             propChain: propChain,
             success: success,
@@ -273,7 +273,7 @@ var TaipuStatic;
     TaipuStatic.ValidateSymbol = ValidateSymbol;
     function ValidateInstanceOf(constructor, value, propChain) {
         var success = (value instanceof constructor);
-        var message = success ? undefined : "Value is not instance of '" + GetFunctionName(constructor) + "'";
+        var message = success ? undefined : "Value is not instance of \"" + GetFunctionName(constructor) + "\"";
         return {
             propChain: propChain,
             success: success,
@@ -308,7 +308,7 @@ var TaipuStatic;
         var success = typeUnion.types.some(function (typeDef) {
             return Validate(typeDef, value, propChain).success;
         });
-        var message = success ? undefined : "Value does not conform to type '" + GetTypeUnionName(typeUnion) + "'";
+        var message = success ? undefined : "Value is not of type \"" + GetTypeUnionName(typeUnion) + "\"";
         return {
             propChain: propChain,
             success: success,
