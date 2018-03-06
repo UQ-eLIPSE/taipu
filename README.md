@@ -1,12 +1,15 @@
 # taipu
+
 JavaScript interface checking at runtime
 
 ## Installation
-```
+
+```bash
 npm install UQ-eLIPSE/taipu
 ```
 
 ## Usage
+
 ```javascript
 /// Importing
 
@@ -81,17 +84,20 @@ IUser.validate(userObjectC);            // { success: false }
 ```
 
 ## Stuff to come
+
 * Support for array checks
-* More detailed validation results
 * More documentation
 * Tests
 
 ## Notes
+
 ### TypeScript support
+
 Because `taipu` is written in TypeScript and exports declaration files, you 
 should get type support automatically.
 
 ### Use of ES2015/ES6 features
+
 While `taipu` is compiled down to ES5 syntax and will generally run on most 
 servers and clients, they will need the following features from ES2015/ES6 
 polyfilled in your environment if they are not present:
@@ -100,6 +106,7 @@ polyfilled in your environment if they are not present:
 * WeakSet
 
 ### Name of constructors
+
 In some instances `taipu` will attempt to produce a string representation of
 constructor functions, which depends on the ES2015 `Function.name` property.
 
