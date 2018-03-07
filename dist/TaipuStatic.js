@@ -171,9 +171,9 @@ var TaipuStatic;
      * @param instance Taipu instance
      */
     function PrependTaipuInstanceNameToValidationMessage(result, instance) {
-        return __assign({}, result, { 
-            // Prefix Taipu instance name
-            message: instance.toString() + ": " + result.message });
+        // Prefix Taipu instance name if message content is not undefined
+        var newMessage = result.message === undefined ? undefined : instance.toString() + ": " + result.message;
+        return __assign({}, result, { message: newMessage });
     }
     TaipuStatic.PrependTaipuInstanceNameToValidationMessage = PrependTaipuInstanceNameToValidationMessage;
     /**

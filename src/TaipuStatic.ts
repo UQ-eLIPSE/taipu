@@ -172,11 +172,12 @@ export namespace TaipuStatic {
      * @param instance Taipu instance
      */
     export function PrependTaipuInstanceNameToValidationMessage(result: Readonly<ValidationResult>, instance: Taipu): ValidationResult {
+        // Prefix Taipu instance name if message content is not undefined
+        const newMessage = result.message === undefined ? undefined : `${instance.toString()}: ${result.message}`;
+
         return {
             ...result,
-
-            // Prefix Taipu instance name
-            message: `${instance.toString()}: ${result.message}`,
+            message: newMessage,
         };
     }
 

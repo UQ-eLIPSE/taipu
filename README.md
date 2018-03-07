@@ -67,20 +67,20 @@ const userObjectC = {
     password: "user"
 };
 
-BooleanType.validate(booleanValue);     // { success: true }
-BooleanType.validate(numberValue);      // { success: false }
+BooleanType.validate(booleanValue);     // { propChain: [], success: true, message: undefined }
+BooleanType.validate(numberValue);      // { propChain: [], success: false, message: 'Taipu("BooleanType"): Value is not of type "boolean"' }
 
-DateType.validate(dateObject);          // { success: true }
-DateType.validate(userObjectA);         // { success: false }
+DateType.validate(dateObject);          // { propChain: [], success: true, message: undefined }
+DateType.validate(userObjectA);         // { propChain: [], success: false, message: 'Taipu("DateType"): Value is not instance of "Date"' }
 
-StrNumBoolType.validate(booleanValue);  // { success: true }
-StrNumBoolType.validate(numberValue);   // { success: true }
-StrNumBoolType.validate(""+dateObject); // { success: true }
-StrNumBoolType.validate(dateObject);    // { success: false }
+StrNumBoolType.validate(booleanValue);  // { propChain: [], success: true, message: undefined }
+StrNumBoolType.validate(numberValue);   // { propChain: [], success: true, message: undefined }
+StrNumBoolType.validate(""+dateObject); // { propChain: [], success: true, message: undefined }
+StrNumBoolType.validate(dateObject);    // { propChain: [], success: false, message: 'Taipu("StrNumBoolType"): Value is not of type "(string | number | Taipu("BooleanType"))"' }
 
-IUser.validate(userObjectA);            // { success: true }
-IUser.validate(userObjectB);            // { success: true }
-IUser.validate(userObjectC);            // { success: false }
+IUser.validate(userObjectA);            // { propChain: [], success: true, message: undefined }
+IUser.validate(userObjectB);            // { propChain: [], success: true, message: undefined }
+IUser.validate(userObjectC);            // { propChain: [ 'fullName' ], success: false, message: 'Taipu("IUser"): Value is not of type "(string | null)"' }
 ```
 
 ## Stuff to come
